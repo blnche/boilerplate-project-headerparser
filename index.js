@@ -5,6 +5,10 @@
 require('dotenv').config();
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
+
+app.use(bodyParser.json()); //this line needs to be before the one after if not boyd = undefined
+app.use(bodyParser.urlencoded({extended: false}));
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
@@ -24,7 +28,19 @@ app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
+
+app.get('/api/whoami', (req, res) => {
+  
+  console.log(JSON.stringify(req.headers, null, 2)) //used this to get headers elements
+
+  res.json({
+    ipaddress: req.ip,
+    language: req.headers['accept-language'],
+    software: req.headers['user-agent']
+  });
+});
+
 // listen for requests :)
-var listener = app.listen(process.env.PORT || 3000, function () {
+var listener = app.listen(process.env.PORT || 3001, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
